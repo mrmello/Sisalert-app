@@ -30,6 +30,14 @@
     <h3>Current: {{ weather.temp.current | temp:2 }}</h3>
     min: {{ weather.temp.min | temp }}, max: {{ weather.temp.max | temp }}
 	</div>
+	
+	<div ng-controller="customersCtrl"> 
+		<ul>
+		  <li ng-repeat="x in names">
+			{{ x.Name + ', ' + x.Country }}
+		  </li>
+		</ul>
+	</div>
   </body>
 
 </html>
