@@ -1,0 +1,10 @@
+<ion-view view-title="Clima">
+  <ion-content class="padding">
+       <div ng-controller="WeatherCtrl">
+  <h2>Brasília, Brazil</h2>
+    <weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>
+    <h3>Current: {{ weather.temp.current | temp:2 }}</h3>
+    min: {{ weather.temp.min | temp }}, max: {{ weather.temp.max | temp }}
+  </div>
+  </ion-content>
+</ion-view>
