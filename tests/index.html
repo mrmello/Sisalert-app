@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+
+  <head>
+    <script data-require="angular.js@*" data-semver="1.3.7" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.7/angular.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <div ng-controller="MainController">
+      <h1>{{text}}</h1>
+    </div>
+      
+    <div ng-controller="PersonController">
+      <div>First name: {{product.firstName}}</div>
+      <div>Last name: {{product.lastName}}</div>
+      <img ng-src="http://odetocode.com/{{product.imageSrc}}" title="{{product.firstName}} {{product.lastName}}">
+    </div>
+    
+    <div ng-controller="StoreController">
+      <h1>{{product.name}}</h1>
+      <h2>{{product.price}}</h2>
+      <h3>{{product.description}}</h3>
+    </div>
+	
+	<div ng-controller="WeatherCtrl">
+	<h2>Weather in Salzburg, Austria</h2>
+    <weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>
+    <h3>Current: {{ weather.temp.current | temp:2 }}</h3>
+    min: {{ weather.temp.min | temp }}, max: {{ weather.temp.max | temp }}
+	</div>
+	
+	<div ng-controller="customersCtrl"> 
+		<ul>
+		  <li ng-repeat="x in names">
+			{{ x.Name + ', ' + x.Country }}
+		  </li>
+		</ul>
+	</div>
+  </body>
+
+</html>
