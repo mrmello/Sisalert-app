@@ -84,7 +84,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-clima': {
         templateUrl: 'templates/clima.html',
-        controller: 'WeatherForecastCtrl'
+        controller: 'WeatherCtrl'
       }
     }
   });
