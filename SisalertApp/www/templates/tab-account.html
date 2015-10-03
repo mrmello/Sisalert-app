@@ -1,6 +1,28 @@
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('#map').css('width',$('#div_maps').width());
+	});	
+</script>
 <ion-view view-title="Account">
   <ion-content>
-    <ion-list>
+    <div ng-app="mapsApp" id="div_maps" ng-controller="MapCtrl">
+    <div id="map" style="height:420px" class="row"></div>
+    <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
+         <!--<a href="#" ng-click="openInfoWindow($event, marker)">{{marker.title}}</a>-->
+    </div>
+    <select id="type" onchange="filterMarkers(this.value);">
+    <option value="">Filtrar Região</option>
+    <option value="Nordeste">Nordeste</option>
+    <option value="Sul">Sul</option>
+    <option value="Leste">Leste</option>
+</select>
+<label class="item item-input">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input ng-model="city" type="text" placeholder="Search">
+    </label>
+    </div>
+</div>
 
   </ion-content>
 </ion-view>
