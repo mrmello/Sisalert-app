@@ -114,46 +114,46 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('MapCtrl', function ($scope) {
+.factory('stationsFactory', function($http) {
+    var runRequest = function() {
+    	return $http({
+			method: 'GET',
+			url: 'http://dev.sisalert.com.br/apirest/api/v1/stations/'			
+      	});
+    }; 
+    return {
+    event: function() {
 
-	var cities = [
-    {
-        city : 'Toronto',
-        region: 'Nordeste',
-        url: 'https://en.wikipedia.org/wiki/Toronto',
-        lat : 43.7000,
-        long : -79.4000
-    },
-    {
-        city : 'New York',
-        region: 'Nordeste',
-        url: 'https://en.wikipedia.org/wiki/Toronto',
-        lat : 40.6700,
-        long : -73.9400
-    },
-    {
-        city : 'Chicago',
-        region: 'Nordeste',
-        url: 'https://en.wikipedia.org/wiki/Toronto',
-        lat : 41.8819,
-        long : -87.6278
-    },
-    {
-        city : 'Los Angeles',
-        region: 'Leste',
-        url: 'https://en.wikipedia.org/wiki/Toronto',
-        lat : 34.0500,
-        long : -118.2500
-    },
-    {
-        city : 'Las Vegas',
-        region: 'Leste',
-        url: 'https://en.wikipedia.org/wiki/Toronto',
-        lat : 36.0800,
-        long : -115.1522
+      return runRequest();
     }
-];
+  };
+})
 
+.controller('MapCtrl', function ($scope, stationsFactory) {
+
+	var cities = [];
+	stationsFactory.event().success(function(response, status) { 
+
+		$.each(response, function (i, value){
+			cities.id = response[i]._id;
+            cities.name = response[i].name;
+            cities.country = response[i].location.country.name;
+            cities.country_abbr = response[i].location.country.abbr;
+            cities.state = response[i].location.state.name;
+            cities.state_abbr = response[i].location.state.abbr;
+
+            if(!$("#stateSelect option[value='"+cities.state_abbr+"']").length > 0){
+            	$('#stateSelect').append($('<option>').text(cities.state).attr('value', cities.state_abbr));            
+            }
+            
+            cities.city = response[i].location.city.name;
+            cities.lat = response[i].location.lat;
+            cities.long = response[i].location.lon;			
+			createMarker(cities);
+		});
+	});
+
+	
     var mapOptions = {
         zoom: 4,
         center: new google.maps.LatLng(40.0000, -98.0000),
@@ -175,54 +175,49 @@ angular.module('starter.controllers', [])
     var infoWindow = new google.maps.InfoWindow();
     
     var createMarker = function (info){
-        
         var marker = new google.maps.Marker({
             map: $scope.map,
             position: new google.maps.LatLng(info.lat, info.long),
             title: info.city,
-            region: info.region
+            label: info.name,
+            state: info.state_abbr
         });
-        marker.content = '<div class="infoWindowContent">' + info.desc + '</div>';
+        marker.content = '<div class="infoWindowContent">' + info.state + '</div>';
         
         google.maps.event.addListener(marker, 'click', function(){
 
         	//var win = window.open(info.url, '_blank');
   			//win.focus();
-            infoWindow.setContent('<h2>' + marker.title + '</h2>' + info.region);
+            infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.label);
             infoWindow.open($scope.map, marker);
         });
         
         $scope.markers.push(marker);
-        
+
+        var bounds = new google.maps.LatLngBounds();
+		for(i=0;i<$scope.markers.length;i++) {
+			bounds.extend($scope.markers[i].getPosition());
+		}
+		$scope.map.fitBounds(bounds);        
     }  
-    
-    for (i = 0; i < cities.length; i++){
-        createMarker(cities[i]);
-    }
 
     $scope.openInfoWindow = function(e, selectedMarker){
         e.preventDefault();
         google.maps.event.trigger(selectedMarker, 'click');
     }
 
-    var bounds = new google.maps.LatLngBounds();
-	for(i=0;i<$scope.markers.length;i++) {
-		bounds.extend($scope.markers[i].getPosition());
+    filterMarkers = function (filter) {   
+     	var state = $("#stateSelect").val();
+	    for (i = 0; i < $scope.markers.length; i++) {
+	        marker = $scope.markers[i];
+	        var city = marker.label;
+	        if (marker.state == filter || ( city.toLowerCase().match(filter.toLowerCase()) && (state == "" ? true : marker.state == state) )|| filter.length === 0) {
+	            marker.setVisible(true);
+	        }
+	        else {
+	            marker.setVisible(false);
+	        }
+	    }
 	}
-
-	$scope.map.fitBounds(bounds);
-
-    filterMarkers = function (filter) {
-    for (i = 0; i < $scope.markers.length; i++) {
-        marker = $scope.markers[i];
-        var city = marker.title;
-        if (marker.region == filter || ( city.toLowerCase().match(filter.toLowerCase()))|| filter.length === 0) {
-            marker.setVisible(true);
-        }
-        else {
-            marker.setVisible(false);
-        }
-    }
-}
 
 });

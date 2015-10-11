@@ -11,11 +11,8 @@
     <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
          <!--<a href="#" ng-click="openInfoWindow($event, marker)">{{marker.title}}</a>-->
     </div>
-    <select id="type" onchange="filterMarkers(this.value);">
+    <select id="stateSelect" onchange="filterMarkers(this.value);">
     <option value="">Filtrar Região</option>
-    <option value="Nordeste">Nordeste</option>
-    <option value="Sul">Sul</option>
-    <option value="Leste">Leste</option>
 </select>
 <label class="item item-input">
       <i class="icon ion-search placeholder-icon"></i>
