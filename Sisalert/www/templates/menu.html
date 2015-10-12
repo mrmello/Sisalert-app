@@ -1,0 +1,45 @@
+
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-balanced">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" class="menuImage">
+    <ion-header-bar class="headerMenu">  
+    <div class="logo">
+
+    </div>
+    </ion-header-bar>
+    <ion-content style="backgroud-color:transparent">
+      <ion-list>
+        <ion-item menu-close class="itemImage" href="#/app/home">
+         <i class="ion-ios-home"></i> <span style="padding-left:10px">Home</span>
+        </ion-item>
+<!--        <ion-item menu-close class="itemImage"ng-click="login()">
+          <i class="ion-ios-home-outline"></i> <span style="padding-left:10px">Login</span>
+        </ion-item>
+-->
+        <ion-item menu-close class="itemImage"href="#/app/estacoes">
+          <i class="ion-ios-location"></i> <span style="padding-left:13px">Estações Metereológicas</span>
+        </ion-item>
+        <ion-item menu-close class="itemImage"href="#/app/giberela">
+          <i class="ion-leaf"></i> <span style="padding-left:10px">Giberela</span>
+        </ion-item>
+        <ion-item menu-close class="itemImage"href="#/app/trigo">
+          <i class="ion-leaf"></i> <span style="padding-left:10px">Brusone</span>
+        </ion-item>
+        <ion-item menu-close class="itemImage"href="#/app/sobre">
+          <i class="ion-document-text"></i> <span style="padding-left:10px">Sobre</span>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

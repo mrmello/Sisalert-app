@@ -1,0 +1,28 @@
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+    $('body, html').addClass("allScreen");
+    $('#map').css('width',$(window).width());
+    $('#map').css('height',$( window ).height()-$( window ).height()/10);
+	});	
+</script>
+<ion-view view-title="Estações Meteorológicas">
+  <ion-content>
+    <div ng-app="mapsApp" class="allScreen" id="div_maps" ng-controller="MapCtrl">
+    <div id="map" style="height:420px;" class="row"></div>
+    <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
+         <!--<a href="#" ng-click="openInfoWindow($event, marker)">{{marker.title}}</a>-->
+    </div>
+    <select id="stateSelect" onchange="filterMarkers(this.value);">
+    <option class="optionSelect" value="">Estado</option>
+</select>
+<label class="item item-input">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input ng-model="city" type="text" placeholder="Search">
+    </label>
+    </div>
+</div>
+
+  </ion-content>
+</ion-view>
+

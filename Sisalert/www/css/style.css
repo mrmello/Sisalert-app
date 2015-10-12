@@ -1,0 +1,16 @@
+/* Empty. Add your own CSS if you like */
+#stateSelect{background-color: darkcyan; width:95%;height: 40px;border-radius: 10px;color: WHITE;font-weight: bold;padding: 0px 10px 0px 10px;margin: 10px 10px 10px 10px;}
+.optionSelect{text-indent:48%;text-align: center;}
+.menuImage{background-color: white;}
+.itemImage{background-color: transparent;  color: darkcyan;font-weight: normal;border-color: transparent;}
+.item-content{background-color: transparent;}
+.headerMenu{height: 75px;background-color: darkcyan; border-color: transparent;background-position: center;}
+.list {margin-top: 20%;}
+.bar.bar-balanced {background-color: darkcyan;  border-width: 0;border-style: hidden;border-top: 0 hidden transparent;border-bottom: 0 hidden;}
+.logo{  background-image: url('/img/logo.png');background-repeat: no-repeat;background-size: contain;background-position: center;width: 100%;margin: 10px 10px 10px 10px}
+.homeTop{background-image: url('/img/wheat1.jpg');background-repeat: no-repeat;background-size: cover;background-position: top center;width: 100%;height: 100%;overflow: hidden;}
+.col{padding: 0px}
+.row{padding: 0px}
+.scroll {height: 100% !important;}
+.button{font-size:16px;margin-top: 0px !important; margin-bottom: 0px !important; color: white; font-weight: bold; background-color: transparent !important;border-style: hidden;;background-color: white;}
+.bottom{width:100%;float: left;position: absolute;bottom: 10%;}
