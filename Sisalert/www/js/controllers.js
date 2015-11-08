@@ -41,15 +41,19 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('homeCtrl', function($scope, $state) {
+ 
+  $scope.redirectToGiberela = function(){
+    $state.go('app.giberela');
+  }
+
+  $scope.redirectToBrusone = function(){
+    $state.go('app.brusone');
+  }
+
+  $scope.redirectToStations = function(){
+    $state.go('app.estacoes');
+  }
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
@@ -100,13 +104,28 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('MapCtrl', function ($scope, stationsFactory) {
+.factory('dataStationsFactory', function($http) {
+    var runRequest = function(id) {
+      return $http({
+      method: 'GET',
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/01-01-2014/01-02-2014'      
+        });
+    }; 
+    return {
+    event: function(id) {
+
+      return runRequest(id);
+    }
+  };
+})
+
+.controller('MapCtrl', function ($scope, stationsFactory, dataStationsFactory) {
 
 	var cities = [];
 	stationsFactory.event().success(function(response, status) { 
 
 		$.each(response, function (i, value){
-			cities.id = response[i]._id;
+			      cities.id = response[i]._id;
             cities.name = response[i].name;
             cities.country = response[i].location.country.name;
             cities.country_abbr = response[i].location.country.abbr;
@@ -123,7 +142,6 @@ angular.module('starter.controllers', [])
 			createMarker(cities);
 		});
 	});
-
 	
     var mapOptions = {
         zoom: 4,
@@ -150,18 +168,31 @@ angular.module('starter.controllers', [])
             map: $scope.map,
             position: new google.maps.LatLng(info.lat, info.long),
             title: info.city,
+            id: info.id,
             label: info.name,
             state: info.state_abbr
         });
-        marker.content = '<div class="infoWindowContent">' + info.state + '</div>';
+        marker.content = '<div class="infoWindowContent"' + info.state + '</div>';
         
         google.maps.event.addListener(marker, 'click', function(){
 
-        	//var win = window.open(info.url, '_blank');
-  			//win.focus();
-            infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.label);
-            infoWindow.open($scope.map, marker);
-        });
+            var resp = '';
+            dataStationsFactory.event(marker.id).success(function(response, status) { 
+              
+                resp = JSON.stringify(response);
+                createWindow(resp);
+            });
+           
+    });
+    
+    $(".close_modal, #div_maps").click(function() {
+      $("#modalconfirma").fadeOut();
+    });
+        
+        var createWindow = function(resp){
+            $("#modalconfirma").fadeIn();
+            $(".float_content p").text(resp)
+        }
         
         $scope.markers.push(marker);
 

@@ -19,6 +19,23 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    $('.downArrow').click(function(){ 
+      if(parseInt($('.mapFilter').css('top')) != 121){
+        $('.mapFilter').animate({top: '121px'});
+        setTimeout(function(){ 
+          $("#arrow").removeClass("ion-chevron-down");
+          $("#arrow").addClass("ion-chevron-up");
+        }, 400);        
+      }else{
+        $('.mapFilter').animate({top: '0px'});
+        setTimeout(function(){ 
+          $("#arrow").removeClass("ion-chevron-up");
+          $("#arrow").addClass("ion-chevron-down");
+        }, 400);
+      }
+    });
+
   });
 })
 
@@ -45,7 +62,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/home',
     views: {
       'menuContent': {
-        templateUrl: 'templates/home.html'
+        templateUrl: 'templates/home.html',
+        controller: 'homeCtrl'
       }
     }
   })
@@ -59,11 +77,11 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    .state('app.trigo', {
-      url: '/trigo',
+    .state('app.brusone', {
+      url: '/brusone',
       views: {
         'menuContent': {
-          templateUrl: 'templates/trigo.html',
+          templateUrl: 'templates/brusone.html',
           controller: ''
         }
       }
