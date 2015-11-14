@@ -82,7 +82,7 @@ angular.module('starter.controllers', ['chart.js'])
     }; 
     return {
     event: function() {
-
+      
       return runRequest();
     }
   };
@@ -97,7 +97,7 @@ angular.module('starter.controllers', ['chart.js'])
     }; 
     return {
     event: function(id) {
-
+      
       return runRequest(id);
     }
   };
@@ -140,7 +140,8 @@ angular.module('starter.controllers', ['chart.js'])
             cities.city = response[i].location.city.name;
             cities.lat = response[i].location.lat;
             cities.long = response[i].location.lon;			
-			createMarker(cities);
+			      
+            createMarker(cities);
 		});
 	});
 	
@@ -180,8 +181,9 @@ angular.module('starter.controllers', ['chart.js'])
             var resp = '';
             dataStationsFactory.event(marker.id).success(function(response, status) { 
               
+
                 resp = JSON.stringify(response);
-                createWindow(resp);
+                createWindow(response);
             });
            
     });
@@ -190,14 +192,29 @@ angular.module('starter.controllers', ['chart.js'])
       $("#modalconfirma").fadeOut();
     });
         
-        var createWindow = function(resp){
-            $("#modalconfirma").fadeIn();
-            $(".float_content p").text(resp)
+    var createWindow = function(resp){
+      $("#modalconfirma").fadeIn();
+      if(resp != 'null'){
+        var count = 0, sumT = 0, sumH = 0, sumR = 0;
+          $.each(resp['data'], function (i, value){            
+              sumT += parseFloat(JSON.stringify(resp['data'][i].data.avgT));
+              sumH += parseFloat(JSON.stringify(resp['data'][i].data.avgH));
+              sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
+              count++;
+            });
+          console.log('sumT: ' + (sumT/count).toFixed(2));
+          console.log('sumH: ' + (sumH/count).toFixed(2));
+          console.log('sumR: ' + (sumR/count).toFixed(2));
+          
+          $(".float_content p").text(resp)
+        }else{
+          $(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
         }
-        
-        $scope.markers.push(marker);
+    }
+    
+    $scope.markers.push(marker);
 
-        var bounds = new google.maps.LatLngBounds();
+    var bounds = new google.maps.LatLngBounds();
 		for(i=0;i<$scope.markers.length;i++) {
 			bounds.extend($scope.markers[i].getPosition());
 		}

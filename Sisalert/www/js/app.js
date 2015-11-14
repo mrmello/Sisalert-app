@@ -37,7 +37,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/estacoes',
     views: {
       'menuContent': {
-        templateUrl: 'templates/estacoes.html'
+        templateUrl: 'templates/estacoes.html',
+        controller: ''
       }
     }
   })
