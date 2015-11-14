@@ -19,23 +19,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-    $('.downArrow').click(function(){ 
-      if(parseInt($('.mapFilter').css('top')) != 121){
-        $('.mapFilter').animate({top: '121px'});
-        setTimeout(function(){ 
-          $("#arrow").removeClass("ion-chevron-down");
-          $("#arrow").addClass("ion-chevron-up");
-        }, 400);        
-      }else{
-        $('.mapFilter').animate({top: '0px'});
-        setTimeout(function(){ 
-          $("#arrow").removeClass("ion-chevron-up");
-          $("#arrow").addClass("ion-chevron-down");
-        }, 400);
-      }
-    });
-
+    
   });
 })
 

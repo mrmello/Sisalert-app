@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['chart.js'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -10,35 +10,19 @@ angular.module('starter.controllers', [])
   //});
 
   // Form data for the login modal
-  $scope.loginData = {};
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
+})
 
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
-
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
+.controller("ExampleController", function($scope) {
+ 
+    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.series = ['Precipitção', 'Temperatura Mínima', 'Temperatura Máxima'];
+    $scope.data = [
+        [5,   0,  0,  8,  0,  40,   0],
+        [13, 12, 13, 16, 15,  18,   17],
+        [17, 19, 25, 24, 29,  23,   22]
+    ];
+ 
 })
 
 .controller('homeCtrl', function($scope, $state) {
@@ -120,6 +104,23 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MapCtrl', function ($scope, stationsFactory, dataStationsFactory) {
+
+  $scope.showFilter = function(){
+    
+      if(parseInt($('.mapFilter').css('top')) != 121){
+        $('.mapFilter').animate({top: '121px'});
+        setTimeout(function(){ 
+          $("#arrow").removeClass("ion-chevron-down");
+          $("#arrow").addClass("ion-chevron-up");
+        }, 400);        
+      }else{
+        $('.mapFilter').animate({top: '0px'});
+        setTimeout(function(){ 
+          $("#arrow").removeClass("ion-chevron-up");
+          $("#arrow").addClass("ion-chevron-down");
+        }, 400);
+      }
+  };
 
 	var cities = [];
 	stationsFactory.event().success(function(response, status) { 

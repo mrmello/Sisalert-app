@@ -8,6 +8,7 @@
 .list {margin-top: 20%;}
 .bar.bar-balanced {background-color: #004545;  border-width: 0;border-style: hidden;border-top: 0 hidden transparent;border-bottom: 0 hidden;}
 .logo{  background-image: url('../img/logo.png');background-repeat: no-repeat;background-size: contain;background-position: center;width: 100%;margin: 10px 10px 10px 10px}
+.logoHome{  background-image: url('../img/logo.png');background-repeat: no-repeat;background-size: contain;background-position: center;  height: 20%;width: 60%;margin-right: 20%;margin-left: 20%;}
 .homeTop{background-image: url('../img/wheat.png');background-repeat: no-repeat;background-size: cover;background-position: top center;width: 100%;height: 100%;overflow: hidden;}
 .col{padding: 0px;  margin-left: 5px;margin-right: 5px;margin-top: 10px;}
 .row{padding: 0px}
