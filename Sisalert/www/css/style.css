@@ -28,5 +28,5 @@
 .close_modal_bottom {z-index: 999;position: absolute;left: 40%;bottom: 6px;}
 .button.button-royal {  background-color: darkred !important;  color: #fff;  border-radius: 8px;}
 .fiveDays {float: right;font-size: 10px;margin: -10px 5px 0px 0px;font-style: italic;}
-.st_data {  margin-top: 5%;font-size: 13px !important;color: darkred;width: 100%;font-weight: 500;margin-left: 10px;padding-right: 20px;}
-.st_name {  text-align: center;font-size: 18px;color: darkred;font-weight: bold;}
+.st_data {  margin-top: 5%;font-size: 13px !important;color: grey;width: 100%;font-weight: 500;margin-left: 10px;padding-right: 20px;}
+.st_name {  text-align: center;font-size: 18px;color: grey;font-weight: bold;}

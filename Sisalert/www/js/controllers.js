@@ -88,11 +88,17 @@ angular.module('starter.controllers', ['chart.js'])
   };
 })
 
-.factory('dataStationsFactory', function($http) {
+.factory('dataStationsFactory', function($http, $filter) {
+    var today = $filter('date')(new Date(),'dd-MM-yyyy');
+    var temp = new Date();
+
+    temp.setDate(temp.getDate()-5);
+    fiveDays = $filter('date')(temp,'dd-MM-yyyy');
+    
     var runRequest = function(id) {
       return $http({
       method: 'GET',
-      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/01-01-2014/01-02-2014'      
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/'+fiveDays+'/'+today+''      
         });
     }; 
     return {
@@ -213,12 +219,15 @@ angular.module('starter.controllers', ['chart.js'])
           var meanH = (sumH/count).toFixed(2);
           var totalR = (sumR/count).toFixed(2);
           
+          //$('.st_name').text();
+          $('.fiveDays, .st_data, .card').css('display', 'flex');
           $('#tempMean').text(tempMean);
           $('#HRMean').text(meanH);
           $('#TotalRain').text(totalR);
         }else{
-          //$(".float_content p").css('margin-top', '35%');
-          //$(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
+          $('.fiveDays, .st_data, .card').css('display', 'none');
+          $(".float_content p").css('margin-top', '45%');
+          $(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
         }
     }
     
