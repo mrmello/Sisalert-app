@@ -13,14 +13,14 @@ angular.module('starter.controllers', ['chart.js'])
 
 })
 
-.controller("ExampleController", function($scope) {
+.controller("GraphController", function($scope) {
  
-    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.labels = ["26 Nov", "27 Nov", "28 Nov", "29 Nov", "30 Nov"];
     $scope.series = ['Precipitção', 'Temperatura Mínima', 'Temperatura Máxima'];
     $scope.data = [
-        [5,   0,  0,  8,  0,  40,   0],
-        [13, 12, 13, 16, 15,  18,   17],
-        [17, 19, 25, 24, 29,  23,   22]
+        [5,   0,  0,  8,  0],
+        [13, 12, 13, 16, 15],
+        [17, 19, 25, 24, 29]
     ];
  
 })
@@ -106,7 +106,6 @@ angular.module('starter.controllers', ['chart.js'])
 .controller('MapCtrl', function ($scope, stationsFactory, dataStationsFactory) {
 
   $scope.showFilter = function(){
-    
       if(parseInt($('.mapFilter').css('top')) != 121){
         $('.mapFilter').animate({top: '121px'});
         setTimeout(function(){ 
@@ -126,22 +125,30 @@ angular.module('starter.controllers', ['chart.js'])
 	stationsFactory.event().success(function(response, status) { 
 
 		$.each(response, function (i, value){
+        
+
 			      cities.id = response[i]._id;
             cities.name = response[i].name;
-            cities.country = response[i].location.country.name;
-            cities.country_abbr = response[i].location.country.abbr;
-            cities.state = response[i].location.state.name;
-            cities.state_abbr = response[i].location.state.abbr;
+            if(response[i].location.country != null){
+                cities.country = response[i].location.country.name;
+                cities.country_abbr = response[i].location.country.abbr;
+            }
+            if(response[i].location.state != null){
+                cities.state = response[i].location.state.name;
+                cities.state_abbr = response[i].location.state.abbr;
+            }
 
             if(!$("#stateSelect option[value='"+cities.state_abbr+"']").length > 0){
             	$('#stateSelect').append($('<option>').text(cities.state).attr('value', cities.state_abbr));            
             }
-            
-            cities.city = response[i].location.city.name;
+            if(response[i].location.city != null){
+                cities.city = response[i].location.city.name;
+            }
             cities.lat = response[i].location.lat;
             cities.long = response[i].location.lon;			
 			      
             createMarker(cities);
+        
 		});
 	});
 	
@@ -188,7 +195,7 @@ angular.module('starter.controllers', ['chart.js'])
            
     });
     
-    $(".close_modal, #div_maps").click(function() {
+    $(".close_modal_bottom, #div_maps").click(function() {
       $("#modalconfirma").fadeOut();
     });
         
@@ -202,13 +209,16 @@ angular.module('starter.controllers', ['chart.js'])
               sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
               count++;
             });
-          console.log('sumT: ' + (sumT/count).toFixed(2));
-          console.log('sumH: ' + (sumH/count).toFixed(2));
-          console.log('sumR: ' + (sumR/count).toFixed(2));
+          var tempMean = (sumT/count).toFixed(2);
+          var meanH = (sumH/count).toFixed(2);
+          var totalR = (sumR/count).toFixed(2);
           
-          $(".float_content p").text(resp)
+          $('#tempMean').text(tempMean);
+          $('#HRMean').text(meanH);
+          $('#TotalRain').text(totalR);
         }else{
-          $(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
+          //$(".float_content p").css('margin-top', '35%');
+          //$(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
         }
     }
     

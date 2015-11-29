@@ -13,14 +13,20 @@
 .col{padding: 0px;  margin-left: 5px;margin-right: 5px;margin-top: 10px;}
 .row{padding: 0px}
 .scroll {height: 100%}
-.button{font-size:16px;margin-top: 0px !important; margin-bottom: 0px !important; color: white; font-weight: bold; background-color: #004545 !important;border-style: hidden;;background-color: white;}
+.button{font-size:16px;margin-top: 0px !important; margin-bottom: 0px !important; color: white; font-weight: bold; border-style: hidden;;background-color: white;}
+.button-home {background-color: #004545 !important;}
 .bottom{width:100%;float: left;position: absolute;bottom: 5%;}
 .scroll-content {background-color: white;}
 .mapFilter {text-align: center;position: absolute;width: 100%;z-index: 99;margin-top: -121px;}
 .downArrow {font-size: 20px; color: darkred; background-color: transparent}
 #inputSearch{margin: 0px 10px 0px 10px;}
-.box{position: fixed; left:5%; top:15%; width:90%; height:70%; z-index:999; background:#fff;}
+.box{position: fixed; left:5%; top:15%; width:90%; height:78%; z-index:999; background:#fff;}
 .box .content_modal{position: absolute; width:80%; top: 20%; left: 10%;bottom: 20%}
 .box .float_content{display:block; padding: 20px 10px; background:#fff; border-radius:5px; text-align:center;}
 .box .float_content p{padding:10px 20px 20px 20px; height:0%;font-size:16px}
 .close_modal {position: relative; z-index: 9999; top: -10px;margin-right: -10px; color:darkred;font-size: 24px; float: right;}
+.close_modal_bottom {z-index: 999;position: absolute;left: 40%;bottom: 6px;}
+.button.button-royal {  background-color: darkred !important;  color: #fff;  border-radius: 8px;}
+.fiveDays {float: right;font-size: 10px;margin: -10px 5px 0px 0px;font-style: italic;}
+.st_data {  margin-top: 5%;font-size: 13px !important;color: darkred;width: 100%;font-weight: 500;margin-left: 10px;padding-right: 20px;}
+.st_name {  text-align: center;font-size: 18px;color: darkred;font-weight: bold;}

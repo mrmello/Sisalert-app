@@ -1,11 +1,33 @@
 <ion-view view-title="Estações Meteorológicas" style="height:100%;">
   <ion-content>
     <div class="box" id="modalconfirma" style="display: none;">
-    <div class="close_modal"><i class="ion-close-circled"></i></div>
+    
         <div class="float_content">
-          <ion-scroll direction="y" class="box">
-              <p>Deseja sair do meu vivo?</p>
+          <ion-scroll direction="y" class="box" style="text-align: left">
+              <p class="st_name" style="text-align: center">Nome da Station</p>
+              <span class="fiveDays">Dados dos útimos 5 dias</span>
+                <table class="st_data" border="1">
+                  <tr>
+                    <td>Temperatura Média:</td><td><span style="margin-left:5em" id="tempMean">  </span></td>
+                  </tr>
+                  <tr>
+                    <td>Umidade Média:</td><td><span style="margin-left:5em" id="HRMean">  </span></td>
+                  </tr>
+                  <tr>
+                    <td>Total de Chuva:</td><td><span style="margin-left:5em" id="TotalRain">  </span></td>
+                  </tr>
+                </table>
+                <div ng-controller="GraphController">
+                  <div class="card" style="margin-top: 10px;">
+                      <div class="item item-text-wrap">
+                          <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="false" chart-series="series" chart-options="{showTooltips: false}"></canvas>
+                      </div>
+                  </div>
+                </div>
           </ion-scroll>
+        </div>
+        <div class="close_modal_bottom">
+          <button class="button button-royal">Voltar</button>
         </div>
     </div>
     <div ng-app="mapsApp" id="div_maps" ng-controller="MapCtrl" style="height:100%;">
