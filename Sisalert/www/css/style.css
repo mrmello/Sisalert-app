@@ -1,5 +1,6 @@
 /* Empty. Add your own CSS if you like */
 #stateSelect{background-color: #009595; width:95%;height: 55px;border-radius: 10px;color: WHITE;font-weight: bold;padding: 0px 10px 0px 10px;margin: 10px 10px 10px 10px;}
+#stationSelect{background-color: #009595; width:95%;height: 55px;border-radius: 10px;color: WHITE;font-weight: bold;padding: 0px 10px 0px 10px;margin: 10px 10px 10px 10px;}
 .optionSelect{text-indent:48%;text-align: center;}
 .menuImage{background-color: white;}
 .itemImage{background-color: white;  color: #004545;font-weight: normal;border-color: transparent;}
@@ -30,3 +31,8 @@
 .fiveDays {float: right;font-size: 10px;margin: -10px 5px 0px 0px;font-style: italic;}
 .st_data {  margin-top: 5%;font-size: 13px !important;color: grey;width: 100%;font-weight: 500;margin-left: 10px;padding-right: 20px;}
 .st_name {  text-align: center;font-size: 18px;color: grey;font-weight: bold;}
+.station_data {color: darkslategray; width: 96%; margin-right: 2%; margin-left: 2%}
+.station_data td{border-bottom: 1px solid #ddd;height: 30px; padding-top: 10px}
+.station_data i{font-size: 24px}
+.station_data label{padding-left:2em}
+.iconMenu {font-size: 24px}

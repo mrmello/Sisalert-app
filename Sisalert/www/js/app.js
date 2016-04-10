@@ -53,20 +53,20 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
-  .state('app.giberela', {
-      url: '/giberela',
+  .state('app.dadosEstacoes', {
+      url: '/dadosEstacoes',
       views: {
         'menuContent': {
-          templateUrl: 'templates/giberela.html',
+          templateUrl: 'templates/dadosEstacoes.html',
           controller: ''
         }
       }
     })
-    .state('app.brusone', {
-      url: '/brusone',
+    .state('app.periodosAntigos', {
+      url: '/periodosAntigos',
       views: {
         'menuContent': {
-          templateUrl: 'templates/brusone.html',
+          templateUrl: 'templates/periodosAntigos.html',
           controller: ''
         }
       }

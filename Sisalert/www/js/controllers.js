@@ -28,12 +28,12 @@ angular.module('starter.controllers', ['chart.js'])
 
 .controller('homeCtrl', function($scope, $state) {
  
-  $scope.redirectToGiberela = function(){
-    $state.go('app.giberela');
+  $scope.redirectTodadosEstacoes = function(){
+    $state.go('app.dadosEstacoes');
   }
 
-  $scope.redirectToBrusone = function(){
-    $state.go('app.brusone');
+  $scope.redirectToperiodosAntigos = function(){
+    $state.go('app.periodosAntigos');
   }
 
   $scope.redirectToStations = function(){
@@ -106,10 +106,99 @@ angular.module('starter.controllers', ['chart.js'])
     }; 
     return {
     event: function(id) {
-      
       return runRequest(id);
     }
   };
+})
+
+.factory('stationsDataFactory', function($http) {
+    var runRequest = function(id) {
+      return $http({
+      method: 'GET',
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/station/'+id+'/lobs/true'      
+        });
+    }; 
+    return {
+    event: function(id) {
+      return runRequest(id);
+    }
+  };
+})
+
+.controller('StationsController', function ($scope, $filter, stationsDataFactory, stationsFactory) {
+
+    stationsFactory.event().success(function(response, status) { 
+       $.each(response, function (i, value){
+        if(!$("#stationSelect option[value='"+response[i]._id+"']").length > 0){
+          $('#stationSelect').append($('<option>').text(response[i].name).attr('value', response[i]._id));            
+        }
+      });
+       sortSelect();
+       getStationData();
+    });
+
+    function sortSelect() {
+    var selElem = document.getElementById('stationSelect');
+    var tmpAry = new Array();
+    for (var i=0;i<selElem.options.length;i++) {
+        tmpAry[i] = new Array();
+        tmpAry[i][0] = selElem.options[i].text;
+        tmpAry[i][1] = selElem.options[i].value;
+    }
+    tmpAry.sort();
+    while (selElem.options.length > 0) {
+        selElem.options[0] = null;
+    }
+    for (var i=0;i<tmpAry.length;i++) {
+        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+        selElem.options[i] = op;
+    }
+    return;
+}
+
+    getStationData = function(){
+        reset();
+        var id = $('#stationSelect').val();
+        stationsDataFactory.event(id).success(function(response, status) { 
+            $('#stationName').text(response.name); 
+            $('#stationOrg').text(response.organization.abbr); 
+            $('#stationLat').text(response.location.lat); 
+            $('#stationLon').text(response.location.lon); 
+            $('#stationElev').text(response.location.elev); 
+            $('#stationAvgT').text(response.lobs.avgT+' C');
+            $('#stationAvgH').text(response.lobs.avgH+' %');
+            $('#stationAvgAP').text(response.lobs.avgAP);
+            $('#stationWindS').text(response.lobs.windS);
+            $('#stationWindD').text(response.lobs.windD);
+            $('#stationSolR').text(response.lobs.solarR);
+            $('#stationTotR').text(response.lobs.totR);
+            $('#stationAvgDP').text(response.lobs.avgDP);
+            $('#stationInterval').text(response.lobs.interval);
+
+            var temp = new Date(response.lobs.datetime);
+            day = $filter('date')(temp,'dd/MM/yy - HH:mm');
+            $('#stationTime').text(day);
+        });
+    }
+
+    reset = function(){
+        $('#stationName').text(''); 
+        $('#stationOrg').text(''); 
+        $('#stationLat').text(''); 
+        $('#stationLon').text(''); 
+        $('#stationElev').text(''); 
+        $('#stationAvgT').text('');
+        $('#stationAvgH').text('');
+        $('#stationAvgAP').text('');
+        $('#stationWindS').text('');
+        $('#stationWindD').text('');
+        $('#stationSolR').text('');
+        $('#stationTotR').text('');
+        $('#stationAvgDP').text('');
+        $('#stationInterval').text('');
+        $('#stationTime').text('');
+    }
+
 })
 
 .controller('MapCtrl', function ($scope, $rootScope, stationsFactory, sharedProperties) {
@@ -244,8 +333,6 @@ angular.module('starter.controllers', ['chart.js'])
     newDay = 0;
     $scope.dataByStation = function() {
         dataStationsFactory.event(sharedProperties.getProperty()).success(function(resp, status) { 
-            
-            
             if(resp != '' && resp != 'null'){
 
                 var count = 0, sumT = 0, sumH = 0, sumR = 0, count2 = 0, dailyT = 0, dailyH = 0;

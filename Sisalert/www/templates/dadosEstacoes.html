@@ -1,0 +1,74 @@
+<ion-view view-title="Resumo dos Dados">
+    <ion-content ng-controller="StationsController">
+	    <select id="stationSelect"  onchange="getStationData();">
+            <option class="optionSelect" value="">Selecione uma Estação</option>
+          </select>
+          <h4 align="center" style="color: darkslategray">Dados da Estação</h4>
+           <table class="station_data">
+               <tr>
+                    <td><i class="ion-earth"></i><label>Nome da Estação:</label></td>
+                    <td><span id="stationName"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-briefcase"></i><label>Organização:</label></td>
+                    <td><span id="stationOrg"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-compass"></i><label>Latitude:</label></td>
+                    <td><span id="stationLat"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-android-compass"></i><label>Longitude:</label></td>
+                    <td><span id="stationLon"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-arrow-graph-up-right"></i><label>Elevação:</label></td>
+                    <td><span id="stationElev"></span></td>
+               </tr>
+           </table>
+           <br>
+           <h4 align="center" style="color: darkslategray">Dados da Última Observação</h4>
+           <table class="station_data">
+               <tr>
+                    <td><i class="ion-thermometer"></i><label>Temperaruta Média:</label></td>
+                    <td><span id="stationAvgT"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-waterdrop"></i><label>Humidade:</label></td>
+                    <td><span id="stationAvgH"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-ios-world-outline"></i><label>Média de Pressão Atmosférica:</label></td>
+                    <td><span id="stationAvgAP"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-arrow-graph-up-left"></i><label>Velocidade do Vento:</label></td>
+                    <td><span id="stationWindS"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-navigate"></i><label>Direção do Vento:</label></td>
+                    <td><span id="stationWindD"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-android-sunny"></i><label>Radiação Solar:</label></td>
+                    <td><span id="stationSolR"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-ios-rainy"></i><label>Precipitação:</label></td>
+                    <td><span id="stationTotR"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-leaf"></i><label>Ponto de Orvalho:</label></td>
+                    <td><span id="stationAvgDP"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-ios-timer-outline"></i><label>Intervalo (seg):</label></td>
+                    <td><span id="stationInterval"></span></td>
+               </tr>
+               <tr>
+                    <td><i class="ion-calendar"></i><label>Hora da Leitura:</label></td>
+                    <td><span id="stationTime"></span></td>
+               </tr>
+           </table>
+	</ion-content>
+</ion-view>
