@@ -236,31 +236,56 @@ angular.module('starter.controllers', ['chart.js'])
     $rootScope.$on("CallDataByStation", function(){
        $scope.dataByStation();
     });
-    days = [];
 
+    days = [];
+    rain = [];
+    temperature = [];
+    humidity = [];
+    newDay = 0;
     $scope.dataByStation = function() {
         dataStationsFactory.event(sharedProperties.getProperty()).success(function(resp, status) { 
             
             
             if(resp != '' && resp != 'null'){
 
-                var count = 0, sumT = 0, sumH = 0, sumR = 0;
+                var count = 0, sumT = 0, sumH = 0, sumR = 0, count2 = 0, dailyT = 0, dailyH = 0;
                 $.each(resp['data'], function (i, value){            
+                    
+                    var temp = new Date(resp['data'][i].datetime);
+                    day = $filter('date')(temp,'dd MMM');
+
+                    if(days.indexOf(day) == -1) {
+                      days.push(day);
+                      if(count != 0){
+                        newDay = 1;
+                      }
+                    } 
+                    
                     sumT += parseFloat(JSON.stringify(resp['data'][i].data.avgT));
                     sumH += parseFloat(JSON.stringify(resp['data'][i].data.avgH));
                     sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
-                    var temp = new Date(resp['data'][i].datetime);
-                    day = $filter('date')(temp,'dd MMM');
-                    
-                    if(days.indexOf(day) == -1) {
-                      days.push(day);
-                    }
-                    count++;
 
-                  });
+                    dailyT += parseFloat(JSON.stringify(resp['data'][i].data.avgT));
+                    dailyH += parseFloat(JSON.stringify(resp['data'][i].data.avgH));
+                    
+                    count++;
+                    count2++;
+                    
+                    if(newDay == 1){
+                        rain.push(sumR.toFixed(2));
+                        temperature.push(dailyT.toFixed(2)/count2);
+                        humidity.push(dailyH.toFixed(2)/count2);
+                        dailyH = 0, dailyT = 0, count2 = 0, newDay = 0;
+                    }
+
+                });
+                rain.push(sumR.toFixed(2));
+                temperature.push(dailyT.toFixed(2)/count2);
+                humidity.push(dailyH.toFixed(2)/count2);    
+                
                 var tempMean = (sumT/count).toFixed(2);
                 var meanH = (sumH/count).toFixed(2);
-                var totalR = (sumR/count).toFixed(2);
+                var totalR = sumR.toFixed(2);
                 
                 $('.fiveDays, .st_data, .card').css('display', 'flex');
                 $(".float_content p").css('margin-top', '0%');
@@ -270,12 +295,18 @@ angular.module('starter.controllers', ['chart.js'])
                 $('#TotalRain').text(totalR+' mm');
 
                 $scope.labels = [days[4], days[3], days[2], days[1], days[0]];
-                $scope.series = ['Precipitção', 'Temperatura Média', 'Humidade Média'];
+                $scope.series = ['Precipitção', 'Humidade Média', 'Temperatura Média'];
                 $scope.data = [
-                    [5,   0,  0,  8,  0],
-                    [13, 12, 13, 16, 15],
-                    [17, 19, 25, 24, 29]
+                    [rain[4], rain[3], rain[2], rain[1], rain[0]],
+                    [humidity[4], humidity[3], humidity[2], humidity[1], humidity[0]],
+                    [temperature[4], temperature[3], temperature[2], temperature[1], temperature[0]]
                 ];
+                while (days.length > 0) {
+                    days.pop();
+                    rain.pop();
+                    temperature.pop();
+                    humidity.pop();
+                }
             }else{
                 $('.fiveDays, .st_data, .card').css('display', 'none');
                 $(".float_content p").css('margin-top', '45%');
