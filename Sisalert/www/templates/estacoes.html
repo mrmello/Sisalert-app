@@ -8,10 +8,10 @@
               <span class="fiveDays">Dados dos útimos 5 dias</span>
                 <table class="st_data" border="1">
                   <tr>
-                    <td>Temperatura Máx. Média:</td><td><span style="margin-left:5em" id="tempMean">  </span></td>
+                    <td>Temperatura Média:</td><td><span style="margin-left:5em" id="tempMean">  </span></td>
                   </tr>
                   <tr>
-                    <td>Temperatura Mín. Média:</td><td><span style="margin-left:5em" id="HRMean">  </span></td>
+                    <td>Humidade Relativa Média:</td><td><span style="margin-left:5em" id="HRMean">  </span></td>
                   </tr>
                   <tr>
                     <td>Total de Chuva:</td><td><span style="margin-left:5em" id="TotalRain">  </span></td>
@@ -27,7 +27,7 @@
           </ion-scroll>
         </div>
         <div class="close_modal_bottom">
-          <button class="button button-royal">Voltar</button>
+          <button class="button button-royal" onclick='$("#modalconfirma").fadeOut();'>Voltar</button>
         </div>
     </div>
     <div ng-app="mapsApp" id="div_maps" ng-controller="MapCtrl" style="height:100%;">

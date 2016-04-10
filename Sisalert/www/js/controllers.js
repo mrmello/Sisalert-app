@@ -1,4 +1,17 @@
 angular.module('starter.controllers', ['chart.js'])
+.service('sharedProperties', function () {
+        var stationID = '';
+
+        return {
+            getProperty: function () {
+                return stationID;
+            },
+            setProperty: function(value) {
+                stationID = value;
+            }
+        };
+    })
+
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -11,18 +24,6 @@ angular.module('starter.controllers', ['chart.js'])
 
   // Form data for the login modal
 
-})
-
-.controller("GraphController", function($scope) {
- 
-    $scope.labels = ["26 Nov", "27 Nov", "28 Nov", "29 Nov", "30 Nov"];
-    $scope.series = ['Precipitção', 'Temperatura Mínima', 'Temperatura Máxima'];
-    $scope.data = [
-        [5,   0,  0,  8,  0],
-        [13, 12, 13, 16, 15],
-        [17, 19, 25, 24, 29]
-    ];
- 
 })
 
 .controller('homeCtrl', function($scope, $state) {
@@ -88,17 +89,19 @@ angular.module('starter.controllers', ['chart.js'])
   };
 })
 
-.factory('dataStationsFactory', function($http, $filter) {
-    var today = $filter('date')(new Date(),'dd-MM-yyyy');
+.factory('dataStationsFactory', function($http, $filter, sharedProperties) {
     var temp = new Date();
 
+    temp.setDate(temp.getDate()-1);
+    yesterday = $filter('date')(temp,'MM-dd-yyyy');
+
     temp.setDate(temp.getDate()-5);
-    fiveDays = $filter('date')(temp,'dd-MM-yyyy');
+    fiveDays = $filter('date')(temp,'MM-dd-yyyy');
     
     var runRequest = function(id) {
       return $http({
       method: 'GET',
-      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/'+fiveDays+'/'+today+''      
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/03-26-2016/03-30-2016'      
         });
     }; 
     return {
@@ -109,7 +112,7 @@ angular.module('starter.controllers', ['chart.js'])
   };
 })
 
-.controller('MapCtrl', function ($scope, stationsFactory, dataStationsFactory) {
+.controller('MapCtrl', function ($scope, $rootScope, stationsFactory, sharedProperties) {
 
   $scope.showFilter = function(){
       if(parseInt($('.mapFilter').css('top')) != 121){
@@ -188,56 +191,23 @@ angular.module('starter.controllers', ['chart.js'])
             state: info.state_abbr
         });
         marker.content = '<div class="infoWindowContent"' + info.state + '</div>';
-        
         google.maps.event.addListener(marker, 'click', function(){
-
-            var resp = '';
-            dataStationsFactory.event(marker.id).success(function(response, status) { 
-              
-
-                resp = JSON.stringify(response);
-                createWindow(response);
-            });
-           
-    });
+            sharedProperties.setProperty(marker.id);
+            $("#modalconfirma").fadeIn();
+            $(".float_content p").text('');
+            $('#tempMean').text('');
+            $('#HRMean').text('');
+            $('#TotalRain').text('');
+            $rootScope.$emit("CallDataByStation", {});
+        });
     
-    $(".close_modal_bottom, #div_maps").click(function() {
-      $("#modalconfirma").fadeOut();
-    });
-        
-    var createWindow = function(resp){
-      $("#modalconfirma").fadeIn();
-      if(resp != 'null'){
-        var count = 0, sumT = 0, sumH = 0, sumR = 0;
-          $.each(resp['data'], function (i, value){            
-              sumT += parseFloat(JSON.stringify(resp['data'][i].data.avgT));
-              sumH += parseFloat(JSON.stringify(resp['data'][i].data.avgH));
-              sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
-              count++;
-            });
-          var tempMean = (sumT/count).toFixed(2);
-          var meanH = (sumH/count).toFixed(2);
-          var totalR = (sumR/count).toFixed(2);
-          
-          //$('.st_name').text();
-          $('.fiveDays, .st_data, .card').css('display', 'flex');
-          $('#tempMean').text(tempMean);
-          $('#HRMean').text(meanH);
-          $('#TotalRain').text(totalR);
-        }else{
-          $('.fiveDays, .st_data, .card').css('display', 'none');
-          $(".float_content p").css('margin-top', '45%');
-          $(".float_content p").text('Serviço Indisponível, tente novamente mais tarde');
-        }
-    }
-    
-    $scope.markers.push(marker);
+      $scope.markers.push(marker);
 
-    var bounds = new google.maps.LatLngBounds();
-		for(i=0;i<$scope.markers.length;i++) {
-			bounds.extend($scope.markers[i].getPosition());
-		}
-		$scope.map.fitBounds(bounds);        
+      var bounds = new google.maps.LatLngBounds();
+  		for(i=0;i<$scope.markers.length;i++) {
+  			bounds.extend($scope.markers[i].getPosition());
+  		}
+  		$scope.map.fitBounds(bounds);        
     }  
 
     $scope.openInfoWindow = function(e, selectedMarker){
@@ -259,4 +229,58 @@ angular.module('starter.controllers', ['chart.js'])
 	    }
 	}
 
+})
+
+.controller("GraphController", function($scope, $rootScope, $filter, sharedProperties, dataStationsFactory) {
+
+    $rootScope.$on("CallDataByStation", function(){
+       $scope.dataByStation();
+    });
+    days = [];
+
+    $scope.dataByStation = function() {
+        dataStationsFactory.event(sharedProperties.getProperty()).success(function(resp, status) { 
+            
+            
+            if(resp != '' && resp != 'null'){
+
+                var count = 0, sumT = 0, sumH = 0, sumR = 0;
+                $.each(resp['data'], function (i, value){            
+                    sumT += parseFloat(JSON.stringify(resp['data'][i].data.avgT));
+                    sumH += parseFloat(JSON.stringify(resp['data'][i].data.avgH));
+                    sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
+                    var temp = new Date(resp['data'][i].datetime);
+                    day = $filter('date')(temp,'dd MMM');
+                    
+                    if(days.indexOf(day) == -1) {
+                      days.push(day);
+                    }
+                    count++;
+
+                  });
+                var tempMean = (sumT/count).toFixed(2);
+                var meanH = (sumH/count).toFixed(2);
+                var totalR = (sumR/count).toFixed(2);
+                
+                $('.fiveDays, .st_data, .card').css('display', 'flex');
+                $(".float_content p").css('margin-top', '0%');
+                $(".float_content p").text('Estação '+resp.weatherStation.name);
+                $('#tempMean').text(tempMean+' C');
+                $('#HRMean').text(meanH+' %');
+                $('#TotalRain').text(totalR+' mm');
+
+                $scope.labels = [days[4], days[3], days[2], days[1], days[0]];
+                $scope.series = ['Precipitção', 'Temperatura Média', 'Humidade Média'];
+                $scope.data = [
+                    [5,   0,  0,  8,  0],
+                    [13, 12, 13, 16, 15],
+                    [17, 19, 25, 24, 29]
+                ];
+            }else{
+                $('.fiveDays, .st_data, .card').css('display', 'none');
+                $(".float_content p").css('margin-top', '45%');
+                $(".float_content p").text('Não foram encontrados dados para serem exibidos, tente novamente mais tarde');
+            }
+        });        
+    }
 });
