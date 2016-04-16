@@ -101,7 +101,7 @@ angular.module('starter.controllers', ['chart.js'])
     var runRequest = function(id) {
       return $http({
       method: 'GET',
-      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/03-26-2016/03-30-2016'      
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/'+fiveDays+'/'+yesterday+''      
         });
     }; 
     return {
