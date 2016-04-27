@@ -90,23 +90,16 @@ angular.module('starter.controllers', ['chart.js'])
 })
 
 .factory('dataStationsFactory', function($http, $filter, sharedProperties) {
-    var temp = new Date();
 
-    temp.setDate(temp.getDate()-1);
-    yesterday = $filter('date')(temp,'MM-dd-yyyy');
-
-    temp.setDate(temp.getDate()-5);
-    fiveDays = $filter('date')(temp,'MM-dd-yyyy');
-    
-    var runRequest = function(id) {
+    var runRequest = function(id, beginDate, yesterday) {
       return $http({
       method: 'GET',
-      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/'+fiveDays+'/'+yesterday+''      
+      url: 'http://dev.sisalert.com.br/apirest/api/v1/data/station/'+id+'/range/'+beginDate+'/'+yesterday+''      
         });
     }; 
     return {
-    event: function(id) {
-      return runRequest(id);
+    event: function(id, beginDate, yesterday) {
+      return runRequest(id, beginDate, yesterday);
     }
   };
 })
@@ -138,23 +131,23 @@ angular.module('starter.controllers', ['chart.js'])
     });
 
     function sortSelect() {
-    var selElem = document.getElementById('stationSelect');
-    var tmpAry = new Array();
-    for (var i=0;i<selElem.options.length;i++) {
-        tmpAry[i] = new Array();
-        tmpAry[i][0] = selElem.options[i].text;
-        tmpAry[i][1] = selElem.options[i].value;
+        var selElem = document.getElementById('stationSelect');
+        var tmpAry = new Array();
+        for (var i=0;i<selElem.options.length;i++) {
+            tmpAry[i] = new Array();
+            tmpAry[i][0] = selElem.options[i].text;
+            tmpAry[i][1] = selElem.options[i].value;
+        }
+        tmpAry.sort();
+        while (selElem.options.length > 0) {
+            selElem.options[0] = null;
+        }
+        for (var i=0;i<tmpAry.length;i++) {
+            var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+            selElem.options[i] = op;
+        }
+        return;
     }
-    tmpAry.sort();
-    while (selElem.options.length > 0) {
-        selElem.options[0] = null;
-    }
-    for (var i=0;i<tmpAry.length;i++) {
-        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
-        selElem.options[i] = op;
-    }
-    return;
-}
 
     getStationData = function(){
         reset();
@@ -200,6 +193,104 @@ angular.module('starter.controllers', ['chart.js'])
     }
 
 })
+
+.controller('PeriodosAntigosController', function ($scope, $filter, dataStationsFactory, stationsFactory) {
+
+    stationsFactory.event().success(function(response, status) { 
+       $.each(response, function (i, value){
+        if(!$("#stationSelect option[value='"+response[i]._id+"']").length > 0){
+          $('#stationSelect').append($('<option>').text(response[i].name).attr('value', response[i]._id));            
+        }
+      });
+       sortSelect();
+    });
+
+    function sortSelect() {
+        var selElem = document.getElementById('stationSelect');
+        var tmpAry = new Array();
+        for (var i=0;i<selElem.options.length;i++) {
+            tmpAry[i] = new Array();
+            tmpAry[i][0] = selElem.options[i].text;
+            tmpAry[i][1] = selElem.options[i].value;
+        }
+        tmpAry.sort();
+        while (selElem.options.length > 0) {
+            selElem.options[0] = null;
+        }
+        for (var i=0;i<tmpAry.length;i++) {
+            var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+            selElem.options[i] = op;
+        }
+        return;
+    }
+
+    getStationData = function(){
+        reset();
+
+        var temp = new Date();
+
+        temp.setDate(temp.getDate()-1);
+        yesterday = $filter('date')(temp,'MM-dd-yyyy');
+
+        temp.setDate(temp.getDate()-90);
+        ninetyDays = $filter('date')(temp,'MM-dd-yyyy');
+        
+        var id = $('#stationSelect').val();
+        dataStationsFactory.event(id, ninetyDays, yesterday).success(function(resp, status) { 
+           dadosPeriodos = new Object();
+           days = [];
+           var count = 0, sumR = 0, oldSumR = 0, rainyDays = 0;
+           countsToShow = [1,2,3,7,15,30,60,90];
+           $.each(resp['data'], function (i, value){            
+                
+              sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
+
+              var temp = new Date(resp['data'][i].datetime);
+              day = $filter('date')(temp,'dd/MM/yy');
+
+              if(days.indexOf(day) == -1) {
+                if(sumR > oldSumR){
+                  rainyDays++;
+                  oldSumR = sumR;
+                }
+                
+                if(countsToShow.indexOf(count) != -1){
+                  console.log(count);
+                  dadosPeriodos[count] = [];
+                  dadosPeriodos[count]['label'] = count + " dias";
+                  dadosPeriodos[count]['rain'] = sumR.toFixed(2) +"mm";
+                  dadosPeriodos[count]['daysNoRain'] = (((count-rainyDays)/count)*100).toFixed(2)+"%";
+                }
+                days.push(day);
+                count++;
+              } 
+               
+
+            });
+           $scope.dados = dadosPeriodos;
+        });
+    }
+
+    reset = function(){
+        $('#stationName').text(''); 
+        $('#stationOrg').text(''); 
+        $('#stationLat').text(''); 
+        $('#stationLon').text(''); 
+        $('#stationElev').text(''); 
+        $('#stationAvgT').text('');
+        $('#stationAvgH').text('');
+        $('#stationAvgAP').text('');
+        $('#stationWindS').text('');
+        $('#stationWindD').text('');
+        $('#stationSolR').text('');
+        $('#stationTotR').text('');
+        $('#stationAvgDP').text('');
+        $('#stationInterval').text('');
+        $('#stationTime').text('');
+    }
+
+})
+
 
 .controller('MapCtrl', function ($scope, $rootScope, stationsFactory, sharedProperties) {
 
@@ -326,13 +417,22 @@ angular.module('starter.controllers', ['chart.js'])
        $scope.dataByStation();
     });
 
-    days = [];
-    rain = [];
-    temperature = [];
-    humidity = [];
-    newDay = 0;
     $scope.dataByStation = function() {
-        dataStationsFactory.event(sharedProperties.getProperty()).success(function(resp, status) { 
+        days = [];
+        rain = [];
+        temperature = [];
+        humidity = [];
+        newDay = 0;
+
+        var temp = new Date();
+
+        temp.setDate(temp.getDate()-1);
+        yesterday = $filter('date')(temp,'MM-dd-yyyy');
+
+        temp.setDate(temp.getDate()-5);
+        fiveDays = $filter('date')(temp,'MM-dd-yyyy');
+        
+        dataStationsFactory.event(sharedProperties.getProperty(), fiveDays, yesterday).success(function(resp, status) { 
             if(resp != '' && resp != 'null'){
 
                 var count = 0, sumT = 0, sumH = 0, sumR = 0, count2 = 0, dailyT = 0, dailyH = 0;
