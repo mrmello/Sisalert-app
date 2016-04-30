@@ -161,7 +161,7 @@ angular.module('starter.controllers', ['chart.js'])
             $('#stationLat').text(response.location.lat); 
             $('#stationLon').text(response.location.lon); 
             $('#stationElev').text(response.location.elev); 
-            $('#stationAvgT').text(response.lobs.avgT+' C');
+            $('#stationAvgT').text(response.lobs.avgT+' °C');
             $('#stationAvgH').text(response.lobs.avgH+' %');
             $('#stationAvgAP').text(response.lobs.avgAP);
             $('#stationWindS').text(response.lobs.windS);
@@ -244,12 +244,20 @@ angular.module('starter.controllers', ['chart.js'])
            dadosPeriodosTemp = new Object();
            dadosPeriodosExt = new Object();
            days = [];
-           var count = 0, sumR = 0, oldSumR = 0, rainyDays = 0, tempMin = 100, tempMax = -100, temperature, acumChuva = 0;
+           var count = 0, sumR = 0, oldSumR = 0, rainyDays = 0, tempMin = 100, tempMax = -100, temperature;
+           var countDays35 = 0, countDays0 = 0, countDays100 = 0, acumChuva = 0;
            countsToShow = [1,2,3,7,15,30,60,90];
            $.each(resp['data'], function (i, value){            
                 
               sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
               temperature = parseFloat(JSON.stringify(resp['data'][i].data.avgT));
+              if(temperature > 35){
+                countDays35++;
+              }
+              if(temperature < 0){
+                countDays0++;
+              }
+              
               if(temperature <= tempMin){
                 tempMin = temperature;
               }
@@ -261,6 +269,10 @@ angular.module('starter.controllers', ['chart.js'])
               day = $filter('date')(temp,'dd/MM/yy');
 
               if(days.indexOf(day) == -1) {
+                if(acumChuva > 100){
+                  countDays100++;
+                }
+                acumChuva = 0;
                 if(sumR > oldSumR){
                   rainyDays++;
                   oldSumR = sumR;
@@ -269,30 +281,33 @@ angular.module('starter.controllers', ['chart.js'])
                 if(countsToShow.indexOf(count) != -1){
                   
                   dadosPeriodosChuva[count] = [];
-                  dadosPeriodosChuva[count]['label'] = count + " dias";
+                  dadosPeriodosChuva[count]['label'] = count + (count == 1 ? " dia" : " dias");
                   dadosPeriodosChuva[count]['rain'] = sumR.toFixed(2) +"mm";
                   dadosPeriodosChuva[count]['daysNoRain'] = (((count-rainyDays)/count)*100).toFixed(2)+"%";
 
                   dadosPeriodosTemp[count] = [];
-                  dadosPeriodosTemp[count]['label'] = count + " dias";
-                  dadosPeriodosTemp[count]['tempMax'] = tempMax +" C";
-                  dadosPeriodosTemp[count]['tempMin'] = tempMin +" C";
+                  dadosPeriodosTemp[count]['label'] = count + (count == 1 ? " dia" : " dias");
+                  dadosPeriodosTemp[count]['tempMax'] = tempMax +" °C";
+                  dadosPeriodosTemp[count]['tempMin'] = tempMin +" °C";
                   tempMax = -100;
                   tempMin = 100;
 
                   dadosPeriodosExt[count] = [];
-                  dadosPeriodosExt[count]['label'] = count + " dias";
-                  dadosPeriodosExt[count]['tempMax'] = tempMax +" C";
-                  dadosPeriodosExt[count]['tempMin'] = tempMin +" C";
+                  dadosPeriodosExt[count]['label'] = count + (count == 1 ? " dia" : " dias");
+                  dadosPeriodosExt[count]['countMaxExt'] = countDays35;
+                  dadosPeriodosExt[count]['countMinExt'] = countDays0;
+                  dadosPeriodosExt[count]['chuvaExt'] = countDays100;
+
                 }
                 days.push(day);
                 count++;
               } 
+              acumChuva += parseFloat(JSON.stringify(resp['data'][i].data.totR));
                
             });
            $scope.dadosChuva = dadosPeriodosChuva;
            $scope.dadosTemperatura = dadosPeriodosTemp;
-           $scope.dadosExtremos = dadosPeriodosExt
+           $scope.dadosExtremos = dadosPeriodosExt;
         });
     }
 

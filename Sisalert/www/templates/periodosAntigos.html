@@ -2,10 +2,10 @@
 	 <ion-content ng-controller="PeriodosAntigosController">
 	    <ion-tabs class="tabs-green tabs-icon-top">
 		  <ion-tab title="Precipitação" icon-on="ion-ios-rainy" icon-off="ion-ios-rainy-outline">
-             <h4 align="center" style="color: darkslategray">Dados da Estação</h4>
-	           <select id="stationSelect"  onchange="getStationData();">
+                <select id="stationSelect"  onchange="getStationData();">
 	            	<option class="optionSelect" value="">- Selecione uma Estação</option>
 	        	</select>
+	        	<h4 align="center" style="color: darkslategray">Preciitação Últimos 90 dias</h4>
 	   			<table class="station_data" style="text-align: center">
 	   			  <tr>
 	   			  	<td>Dias</td>
@@ -20,7 +20,7 @@
 	           	</table>
 		  </ion-tab>
 		  <ion-tab title="Temperatura" icon-on="ion-thermometer" icon-off="ion-thermometer">
-		   <h4 align="center" style="color: darkslategray">Dados da Última Observação</h4>
+		   <h4 align="center" style="color: darkslategray">Temperaturas Últimos 90 dias</h4>
            		 <table class="station_data" style="text-align: center">
 	   			  <tr>
 	   			  	<td>Dias</td>
@@ -36,7 +36,21 @@
 		  </ion-tab>
 
 		  <ion-tab title="Fenômenos Extremos" icon-on="ion-alert-circled" icon-off="ion-alert-circled">
-		    <!-- Tab 3 content -->
+		     <h4 align="center" style="color: darkslategray">Fenômenos Extremos Últimos 90 dias</h4>
+           		 <table class="station_data" style="text-align: center">
+	   			  <tr>
+	   			  	<td>Dias</td>
+	   			  	<td>Tmin. > 35 °C</td>
+	   			  	<td>Tmax. < 0 °C</td>
+	   			  	<td>chuva > 100 mm</td>
+	   			  </tr>
+				  <tr ng-repeat="x in dadosExtremos">
+				    <td>{{ x.label }}</td>
+				    <td>{{ x.countMaxExt }}</td>
+				    <td>{{ x.countMinExt }}</td>
+				    <td>{{ x.chuvaExt }}</td>
+				  </tr>    
+	           	</table>
 		  </ion-tab>
 
 		</ion-tabs>
