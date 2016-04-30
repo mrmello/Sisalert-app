@@ -12,7 +12,7 @@
 	   			  	<td>Chuva Acumulada</td>
 	   			  	<td>% dias sem chuva</td>
 	   			  </tr>
-				  <tr ng-repeat="x in dados">
+				  <tr ng-repeat="x in dadosChuva">
 				    <td>{{ x.label }}</td>
 				    <td>{{ x.rain }}</td>
 				    <td>{{ x.daysNoRain }}</td>
@@ -21,14 +21,18 @@
 		  </ion-tab>
 		  <ion-tab title="Temperatura" icon-on="ion-thermometer" icon-off="ion-thermometer">
 		   <h4 align="center" style="color: darkslategray">Dados da Última Observação</h4>
-             <table>
-				  <tr ng-repeat="x in dados">
+           		 <table class="station_data" style="text-align: center">
+	   			  <tr>
+	   			  	<td>Dias</td>
+	   			  	<td>Max</td>
+	   			  	<td>Min</td>
+	   			  </tr>
+				  <tr ng-repeat="x in dadosTemperatura">
 				    <td>{{ x.label }}</td>
-				    <td>{{ x.rain }}</td>
-				    <td>{{ x.daysNoRain }}</td>
-				  </tr>
-				</table>
-
+				    <td>{{ x.tempMax }}</td>
+				    <td>{{ x.tempMin }}</td>
+				  </tr>    
+	           	</table>
 		  </ion-tab>
 
 		  <ion-tab title="Fenômenos Extremos" icon-on="ion-alert-circled" icon-off="ion-alert-circled">

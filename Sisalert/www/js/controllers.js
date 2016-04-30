@@ -1,4 +1,7 @@
 angular.module('starter.controllers', ['chart.js'])
+.config(function($ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position("bottom");
+})
 .service('sharedProperties', function () {
         var stationID = '';
 
@@ -237,13 +240,22 @@ angular.module('starter.controllers', ['chart.js'])
         
         var id = $('#stationSelect').val();
         dataStationsFactory.event(id, ninetyDays, yesterday).success(function(resp, status) { 
-           dadosPeriodos = new Object();
+           dadosPeriodosChuva = new Object();
+           dadosPeriodosTemp = new Object();
+           dadosPeriodosExt = new Object();
            days = [];
-           var count = 0, sumR = 0, oldSumR = 0, rainyDays = 0;
+           var count = 0, sumR = 0, oldSumR = 0, rainyDays = 0, tempMin = 100, tempMax = -100, temperature, acumChuva = 0;
            countsToShow = [1,2,3,7,15,30,60,90];
            $.each(resp['data'], function (i, value){            
                 
               sumR += parseFloat(JSON.stringify(resp['data'][i].data.totR));
+              temperature = parseFloat(JSON.stringify(resp['data'][i].data.avgT));
+              if(temperature <= tempMin){
+                tempMin = temperature;
+              }
+              if(temperature >= tempMax){
+                tempMax = temperature;
+              }
 
               var temp = new Date(resp['data'][i].datetime);
               day = $filter('date')(temp,'dd/MM/yy');
@@ -253,21 +265,34 @@ angular.module('starter.controllers', ['chart.js'])
                   rainyDays++;
                   oldSumR = sumR;
                 }
-                
+
                 if(countsToShow.indexOf(count) != -1){
-                  console.log(count);
-                  dadosPeriodos[count] = [];
-                  dadosPeriodos[count]['label'] = count + " dias";
-                  dadosPeriodos[count]['rain'] = sumR.toFixed(2) +"mm";
-                  dadosPeriodos[count]['daysNoRain'] = (((count-rainyDays)/count)*100).toFixed(2)+"%";
+                  
+                  dadosPeriodosChuva[count] = [];
+                  dadosPeriodosChuva[count]['label'] = count + " dias";
+                  dadosPeriodosChuva[count]['rain'] = sumR.toFixed(2) +"mm";
+                  dadosPeriodosChuva[count]['daysNoRain'] = (((count-rainyDays)/count)*100).toFixed(2)+"%";
+
+                  dadosPeriodosTemp[count] = [];
+                  dadosPeriodosTemp[count]['label'] = count + " dias";
+                  dadosPeriodosTemp[count]['tempMax'] = tempMax +" C";
+                  dadosPeriodosTemp[count]['tempMin'] = tempMin +" C";
+                  tempMax = -100;
+                  tempMin = 100;
+
+                  dadosPeriodosExt[count] = [];
+                  dadosPeriodosExt[count]['label'] = count + " dias";
+                  dadosPeriodosExt[count]['tempMax'] = tempMax +" C";
+                  dadosPeriodosExt[count]['tempMin'] = tempMin +" C";
                 }
                 days.push(day);
                 count++;
               } 
                
-
             });
-           $scope.dados = dadosPeriodos;
+           $scope.dadosChuva = dadosPeriodosChuva;
+           $scope.dadosTemperatura = dadosPeriodosTemp;
+           $scope.dadosExtremos = dadosPeriodosExt
         });
     }
 
