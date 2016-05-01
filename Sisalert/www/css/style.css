@@ -14,7 +14,7 @@
 .col{padding: 0px;  margin-left: 5px;margin-right: 5px;margin-top: 10px;}
 .row{padding: 0px}
 .scroll {height: 100%}
-.button{font-size:16px;margin-top: 0px !important; margin-bottom: 0px !important; color: white; font-weight: bold; border-style: hidden;;background-color: white;}
+.button{font-size:13px;margin-top: 0px !important; margin-bottom: 0px !important; color: white; font-weight: bold; border-style: hidden;;background-color: white;}
 .button-home {background-color: #004545 !important;}
 .bottom{width:100%;float: left;position: absolute;bottom: 5%;}
 .scroll-content {background-color: white;}
